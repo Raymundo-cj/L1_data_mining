@@ -67,7 +67,12 @@ mmseqs search metagenome.pep_1_DB pAgo_DB result_1_DB 1.tmp --start-sens 4 --sen
 mmseqs convertalis metagenome.pep_1_DB pAgo_DB result_1_DB  mmseqs_1_results.txt
 ```
 
+提交任务的命令记录：
 
+```
+chmod a+x
+nohup ./get_list_fas.sh  >outfile_list_fa 2>&1 &
+```
 
 
 
