@@ -47,7 +47,7 @@ python delete_repeat_fasta3.py nr-1_len200.fasta nr_1_report.fasta &
 wait
 echo "finished"
 ```
-### data align
+### 2.data align
 
 **1.psi-blast**
 ```
@@ -58,6 +58,20 @@ makeblastdb -in /data/caojian/L1/seed.fasta -dbtype prot -title seed.pep -parse_
 #!/bin/bash
 psiblast -query /data/caojian/L1/ncbi/fast_file/nr_1_report.fasta -evalue 1e-5 -inclusion_ethresh .002 -db /data/caojian/L1/blast/seed.pep -num_iterations 5 -seg yes -outfmt '7 std qseq sseq stitle' -out nr_bl_1.output -max_target_seqs 500 
 ```
+这一步执行结束后会得到这样的一些结果：
+
+![image](https://github.com/Raymundo-cj/L1_data_mining/assets/64938817/fd77b331-9639-4651-af35-89cec8187813)
+
+根据下面的代码筛选出比对结果中的蛋白序列号及蛋白序列文件：
+
+```
+sed '/#/d' nr_bl_1.output|awk '{print $1}'|sort|uniq > nr_bl_1.list
+
+seqtk subseq /data/caojian/L1/ncbi/fast_file/nr_1_report.fasta nr_bl_1.list > nr_bl_1.fasta
+
+cat nr_bl_1.fasta ... >> nr_bl.fasta
+```
+
 **2.mmseq**
 
 ```
@@ -66,13 +80,10 @@ mmseqs createdb ~/shared_public_data/metagenome_data//public1/home/scb8190/share
 mmseqs search metagenome.pep_1_DB pAgo_DB result_1_DB 1.tmp --start-sens 4 --sens-steps 4 -s 7 -e 1e-6
 mmseqs convertalis metagenome.pep_1_DB pAgo_DB result_1_DB  mmseqs_1_results.txt
 ```
+### 3.后续分析
 
-提交任务的命令记录：
+**1.**
 
-```
-chmod a+x
-nohup ./get_list_fas.sh  >outfile_list_fa 2>&1 &
-```
 
 
 
