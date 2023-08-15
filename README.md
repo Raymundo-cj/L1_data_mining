@@ -82,8 +82,63 @@ mmseqs convertalis metagenome.pep_1_DB pAgo_DB result_1_DB  mmseqs_1_results.txt
 ```
 ### 3.后续分析
 
-**1.**
+**1.pfam注释**
 
+```
+#!/bin/bash
+#SBATCH -p amd_256
+#SBATCH -N 1
+#SBATCH -n 64
+hmmscan --domtblout nr_blast.dbl --tblout nr_blast.tbl --noali -E 1e-2 --cpu 64 /public1/home/scb8190/Test/CRISPR/Pfam/Pfam-A.full.uniprot.hmm nr_bl.fasta
+echo "finished"
+```
+根据pfam结果筛选含有“Endonuclease-reverse transcriptase”domain的序列
+
+```
+grep 'Endonuclease-reverse transcriptase' nr_blast.dbl|awk '{print $4}'|sort|uniq >domain_bl.list
+seqtk subseq nr_bl.fasta domain_bl.list > nr_bl_pfam.fasta
+```
+**2.比对物种全基因组**
+```
+makeblastdb -in Arabidopsis_thaliana.fasta -dbtype nucl -parse_seqids -input_type fasta -out Arabidopsis_thaliana
+
+tblastn -db ~/caojian/non-ltr/orf2_tblastn/gene/Arabidopsis_thaliana/Arabidopsis_thaliana -query ~/caojian/L1/seed/nr_bl_pfam.fasta -outfmt 6 -out tblastn_Arabidopsis_thaliana.result
+```
+根据上面得到的tblastn结果，将比对的序列根据比对长度筛选大于800，获取其在基因组上的位置，在对比位置处上下游各延长2K，得到后续的文件
+
+```
+python test.py tblastn_Arabidopsis_thaliana.result ~/caojian/non-ltr/orf2_tblastn/gene/Arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
+```
+
+```
+import csv,sys,pysam
+
+input_file=sys.argv[1]
+fasta=sys.argv[2]
+
+def get_seq(chr,start,end):
+	fasta_open = pysam.Fastafile(fasta)
+	seq = fasta_open.fetch(chr,start,end)
+	fasta_open.close()
+	return seq
+
+with open(input_file) as f:
+   reader = csv.reader(f, delimiter='\t')
+   for row in reader:
+     if int(row[3]) > 800:
+        if int(row[8]) >int(row[9]):
+           start=int(row[9]) -2000
+           end=int(row[8]) +2000
+        else:
+           start=int(row[8]) - 2000
+           end=int(row[9]) + 2000
+        seq_id=row[1]
+        tem = get_seq(seq_id,start,end)
+        file = open(seq_id + "_" + str(start) + "_" + str(end) + ".seq","w")
+        file.write(">" + seq_id + str(start) + "-" + str(end) + "\n")
+        file.write(tem)
+        file.close()
+```
 
 
 
