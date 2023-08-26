@@ -105,6 +105,22 @@ makeblastdb -in Arabidopsis_thaliana.fasta -dbtype nucl -parse_seqids -input_typ
 tblastn -db ~/caojian/non-ltr/orf2_tblastn/gene/Arabidopsis_thaliana/Arabidopsis_thaliana -query ~/caojian/L1/seed/nr_bl_pfam.fasta -outfmt 6 -out tblastn_Arabidopsis_thaliana.result
 ```
 根据上面得到的tblastn结果，将比对的序列根据比对长度筛选大于800，获取其在基因组上的位置，在对比位置处上下游各延长2K，得到后续的文件
+上述步骤的输出参数详解：
+```
+query id：查询序列ID标识;
+refer id：参考序列ID标识;
+identity (%)：序列比对的一致性百分比;
+alignment length：符合比对的比对区域的长度;
+mismatches：比对区域的错配数;
+gap openings：比对区域的gap数目;
+q.start：比对区域在查询序列(query id)上的起始位点;
+q.end：比对区域在查询序列(query id)上的终止位点;
+s.start：比对区域在参考序列(refer id)上的起始位点;
+s.end：比对区域在参考序列(refer id)上的终止位点;
+e-value：比对结果的期望值，将比对序列随机打乱重新组合，和数据库进行比对，如果功能越保守，则该值越低；
+bit score：比对结果的bit score值;
+
+```
 
 ```
 mkdir result
