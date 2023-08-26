@@ -104,7 +104,6 @@ makeblastdb -in Arabidopsis_thaliana.fasta -dbtype nucl -parse_seqids -input_typ
 
 tblastn -db ~/caojian/non-ltr/orf2_tblastn/gene/Arabidopsis_thaliana/Arabidopsis_thaliana -query ~/caojian/L1/seed/nr_bl_pfam.fasta -outfmt 6 -out tblastn_Arabidopsis_thaliana.result
 ```
-根据上面得到的tblastn结果，将比对的序列根据比对长度筛选大于800，获取其在基因组上的位置，在对比位置处上下游各延长2K，得到后续的文件
 上述步骤的输出参数详解：
 ```
 query id：查询序列ID标识;
@@ -121,14 +120,37 @@ e-value：比对结果的期望值，将比对序列随机打乱重新组合，�
 bit score：比对结果的bit score值;
 
 ```
+根据上面得到的tblastn结果，将比对的序列根据比对长度筛选大于800，获取其在基因组上的位置，在对比位置处上下游各延长2K，得到后续的基因序列文件
 
 ```
 mkdir result
 python from_outresult_getfa.py tblastn_Arabidopsis_thaliana.result ~/caojian/non-ltr/orf2_tblastn/gene/Arabidopsis_thaliana/Arabidopsis_thaliana.TAIR10.dna.toplevel.fa
 # python file save at Data_processing
 ```
+**3.ORF预测及蛋白序列获取**
 
+这里采用的ORF预测软件为ORFinder，命令如下：
 
+```
+#!/bin/bash
+#SBATCH -N 1
+#SBATCH -n 64 
+#SBATCH -p amd_256
+export  LD_LIBRARY_PATH=/public1/home/scb8190/caojian/soft/orfinder/nghttp2/install/lib:$LD_LIBRARY_PATH
+export PATH=/public1/home/scb8190/caojian/soft/orfinder:$PATH
 
+for i in `cat file_list`
+do
+ ORFfinder -in '/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/'$i'.fasta' -s 0 -ml 800 -out $i'_orf2.fasta' -outfmt 0
+done
+```
+解释一下上面代码的参数：
+```
+-in：指定输入文件的路径；
+-s：设置起始密码子，参数为0表示任意密码子
+-ml：设置最小ORF长度，这里设置为800，主要考虑的是ORF1的最小长度应该设置为800；
+-out：指定输出文件的路径和文件名。
+```
 
+这里的`file_list`是tblastn之后拿到的
 
