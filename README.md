@@ -152,5 +152,7 @@ done
 -out：指定输出文件的路径和文件名。
 ```
 
-这里的`file_list`是tblastn之后拿到的
+这里的`file_list`是tblastn之后拿到的核酸序列文件名称，正如命令中显示的那样这些文件存储在`/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/`这个结果文件夹下。
+
+
 
