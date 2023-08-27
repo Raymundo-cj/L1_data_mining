@@ -144,7 +144,7 @@ do
  ORFfinder -in '/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/'$i'.fasta' -s 0 -ml 800 -out $i'_orf2.fasta' -outfmt 0
 done
 ```
-解释一下上面代码的参数：
+解释一下上面代码的参数设置原则：
 ```
 -in：指定输入文件的路径；
 -s：设置起始密码子，参数为0表示任意密码子
@@ -152,7 +152,9 @@ done
 -out：指定输出文件的路径和文件名。
 ```
 
-这里的`file_list`是tblastn之后拿到的核酸序列文件名称，正如命令中显示的那样这些文件存储在`/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/`这个结果文件夹下。
+这里的`file_list`是tblastn之后拿到的核酸序列文件名称，正如命令中显示的那样这些文件存储在`/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/`这个结果文件夹下；
+
+
 
 
 
