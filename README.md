@@ -154,7 +154,7 @@ done
 
 这里的`file_list`是tblastn之后拿到的核酸序列文件名称，正如命令中显示的那样这些文件存储在`/public1/home/scb8190/caojian/L1/seed/Arabidopsis_thaliana/Arabidopsis_thaliana_800/result/`这个结果文件夹下；
 
-
+**4.将上述得到的蛋白序列文件进行合并，得到总的蛋白序列文件**
 
 
 
